@@ -80,7 +80,7 @@ export const Navigation = () => {
   return (
     <div
       className={classNames(
-        'fixed bg-white z-20 top-[60px] bottom-0 left-[max(0px,calc(50%-45rem))] w-[19.5rem] border-r border-stone-200 dark:border-stone-700',
+        'fixed light:bg-white dark:bg-stone-900 z-20 top-[60px] bottom-0 left-[max(0px,calc(50%-45rem))] w-[19.5rem] border-r border-stone-200 dark:border-stone-700',
         {
           ['flex flex-col']: isNavOpen,
           ['hidden xl:flex']: !isNavOpen,

@@ -4,7 +4,7 @@ export const UiContext = createContext<[{ isNavOpen: boolean }, any]>([
   {
     isNavOpen: false,
   },
-  () => {},
+  () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
 ]);
 // Create a provider for components to consume and subscribe to changes
 export const UiStateProvider = (props: any) => {

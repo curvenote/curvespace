@@ -3,14 +3,34 @@ import { ThemeButton } from './ThemeButton';
 import { getFolder } from '~/utils';
 import classNames from 'classnames';
 import { useConfig } from './ConfigProvider';
+import { useContext } from 'react';
+import { UiContext } from './UiStateProvider';
 
 export function TopNav() {
   const config = useConfig();
+  const [state, setState] = useContext(UiContext);
   const { logo, logoText, sections, actions, name } = config?.site ?? {};
   return (
     <div className="bg-stone-700 p-3 px-8 fixed w-screen top-0 z-30">
       <nav className="flex items-center justify-between flex-wrap max-w-[1440px] mx-auto">
-        <div className="block xl:min-w-[19.5rem] mr-7 justify-center">
+        <div className="flex flex-row xl:min-w-[19.5rem] mr-7 justify-start items-center">
+          <div className="block xl:hidden">
+            <button
+              className="flex items-center px-3 py-2 border rounded text-stone-200 border-stone-400 hover:text-white hover:border-white"
+              onClick={() => {
+                setState({ isNavOpen: !state.isNavOpen });
+              }}
+            >
+              <svg
+                className="fill-current h-3 w-3"
+                viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <title>Menu</title>
+                <path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z" />
+              </svg>
+            </button>
+          </div>
           <Link
             className="flex items-center text-white w-fit ml-7"
             to="/"
@@ -27,19 +47,26 @@ export function TopNav() {
             )}
           </Link>
         </div>
-        <div className="block md:hidden">
-          <button className="flex items-center px-3 py-2 border rounded text-stone-200 border-stone-400 hover:text-white hover:border-white">
+        <div className="block xl:hidden">
+          <button className="flex items-center px-3 py-2 text-stone-200 hover:text-white">
             <svg
-              className="fill-current h-3 w-3"
-              viewBox="0 0 20 20"
               xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
             >
-              <title>Menu</title>
-              <path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+              />
             </svg>
           </button>
         </div>
-        <div className="hidden flex-grow md:flex items-center w-auto">
+
+        <div className="hidden flex-grow xl:flex items-center w-auto">
           <div className="text-md flex-grow">
             {sections?.map((sec) => {
               const folder = getFolder(config, sec.folder);

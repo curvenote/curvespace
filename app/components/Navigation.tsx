@@ -1,9 +1,10 @@
 import classNames from 'classnames';
-import React from 'react';
+import React, { useContext } from 'react';
 import { NavLink, useParams, useLocation } from 'remix';
 import { getFolderPages, Heading } from '~/utils';
 import { useConfig } from './ConfigProvider';
 import { CreatedInCurvenote } from './curvenote';
+import { UiContext } from './UiStateProvider';
 
 type Props = {
   headings: Heading[];
@@ -74,9 +75,18 @@ export const Navigation = () => {
   const config = useConfig();
   const { folder: folderName } = useParams();
   const headings = getFolderPages(config, folderName);
+  const [{ isNavOpen }] = useContext(UiContext);
   if (!headings) return null;
   return (
-    <div className="hidden xl:flex flex-col fixed z-20 top-[60px] bottom-0 left-[max(0px,calc(50%-45rem))] w-[19.5rem] border-r border-stone-200 dark:border-stone-700">
+    <div
+      className={classNames(
+        'fixed bg-white z-20 top-[60px] bottom-0 left-[max(0px,calc(50%-45rem))] w-[19.5rem] border-r border-stone-200 dark:border-stone-700',
+        {
+          ['flex flex-col']: isNavOpen,
+          ['hidden xl:flex']: !isNavOpen,
+        },
+      )}
+    >
       <nav
         aria-label="Navigation"
         className="flex-grow pt-10 pb-3 px-8 overflow-y-auto"

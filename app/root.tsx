@@ -10,8 +10,8 @@ import {
   useLoaderData,
 } from 'remix';
 import type { MetaFunction, LinksFunction } from 'remix';
-import React, { createContext, useState } from 'react';
-import { Theme, ThemeProvider, TopNav } from '~/components';
+import React from 'react';
+import { Theme, ThemeProvider } from '~/components';
 import { Navigation } from './components/Navigation';
 import { getThemeSession } from '~/utils/theme.server';
 import tailwind from './styles/app.css';
@@ -68,10 +68,7 @@ function Document({
         <UiStateProvider>
           <ThemeProvider theme={theme}>
             <ConfigProvider config={config}>
-              <div>
-                <TopNav />
-                <Navigation />
-              </div>
+              <Navigation />
               {children}
             </ConfigProvider>
           </ThemeProvider>

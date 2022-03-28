@@ -22,6 +22,7 @@ export type Config = {
 
 export type Heading = {
   slug?: string;
+  path?: string;
   title: string;
   level: number | 'index';
   group?: string;

@@ -1,8 +1,8 @@
 import type { GenericNode, GenericParent } from 'mystjs';
 
 export type Config = {
+  id: string;
   site: {
-    id: string;
     name: string;
     sections: { title: string; folder: string }[];
     twitter?: string;

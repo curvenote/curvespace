@@ -221,7 +221,10 @@ export function TopNav() {
   console.log('sections', sections);
 
   return (
-    <div className="bg-stone-700 p-3 md:px-8 fixed w-screen top-0 z-30">
+    <div
+      className="bg-stone-700 px-3 md:px-8 fixed w-screen top-0 z-30 pt-3"
+      style={{ height: 60 }}
+    >
       <nav className="flex items-center justify-between flex-wrap max-w-[1440px] mx-auto">
         <div className="flex flex-row xl:min-w-[19.5rem] mr-2 sm:mr-7 justify-start items-center">
           <div className="block xl:hidden">

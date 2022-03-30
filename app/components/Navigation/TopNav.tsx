@@ -8,6 +8,7 @@ import { Config, getFolder } from '~/utils';
 import { ThemeButton } from '../ThemeButton';
 import { useConfig } from '../ConfigProvider';
 import { useNavOpen } from '../UiStateProvider';
+import { ChevronDownIcon } from '@heroicons/react/solid';
 
 function ActionMenu({ actions }: { actions?: Config['site']['actions'] }) {
   if (!actions || actions.length === 0) return null;
@@ -95,11 +96,130 @@ function useLoading() {
   return { showLoading, isLoading: transitionState === 'loading' };
 }
 
+interface NavItemState {
+  title: string;
+  folder: string;
+  children?: NavItemState[];
+}
+
+function NavItem({ item }: { item: NavItemState }) {
+  const isActive = false;
+  if (!item.children) {
+    return (
+      <div className="relative grow-0 inline-block">
+        <NavLink
+          key={item.folder}
+          prefetch="intent"
+          to={`/${item.folder}`}
+          className={({ isActive }) =>
+            classNames(
+              'inline-flex items-center justify-center w-full px-4 py-2 text-md font-medium text-white rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75',
+              {
+                'border-b border-stone-200': isActive,
+              },
+            )
+          }
+        >
+          {item.title}
+        </NavLink>
+      </div>
+    );
+  }
+  return (
+    <Menu as="div" className="relative grow-0 inline-block">
+      <div className="inline-block">
+        <Menu.Button
+          className={classNames(
+            'inline-flex items-center justify-center w-full px-4 py-2 text-md font-medium text-white rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75',
+            {
+              'border-b border-stone-200': isActive,
+            },
+          )}
+        >
+          <span>{item.title}</span>
+          <ChevronDownIcon
+            className="w-5 h-5 ml-2 -mr-1 text-violet-200 hover:text-violet-100"
+            aria-hidden="true"
+          />
+        </Menu.Button>
+      </div>
+      <Transition
+        as={Fragment}
+        enter="transition ease-out duration-100"
+        enterFrom="transform opacity-0 scale-95"
+        enterTo="transform opacity-100 scale-100"
+        leave="transition ease-in duration-75"
+        leaveFrom="transform opacity-100 scale-100"
+        leaveTo="transform opacity-0 scale-95"
+      >
+        <Menu.Items className="origin-top-right absolute right-0 mt-2 w-48 rounded-sm shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+          {item.children?.map((action) => (
+            <Menu.Item key={action.folder}>
+              {({ active }) => (
+                <NavLink
+                  prefetch="intent"
+                  to={`/${action.folder}`}
+                  className={classNames(
+                    active ? 'bg-gray-100' : '',
+                    'block px-4 py-2 text-sm text-gray-700',
+                  )}
+                >
+                  {action.title}
+                </NavLink>
+              )}
+            </Menu.Item>
+          ))}
+        </Menu.Items>
+      </Transition>
+    </Menu>
+  );
+}
+
+const DUMMY_NAV_ITEMS: NavItemState[] = [
+  {
+    title: 'First Level Nav',
+    folder: 'first-level-nav',
+    children: [
+      {
+        title: 'Nested 1st',
+        folder: 'Nested-1st',
+      },
+      {
+        title: 'Nested 2st',
+        folder: 'Nested-2st',
+      },
+      {
+        title: 'Nested 3st',
+        folder: 'Nested-3st',
+      },
+    ],
+  },
+  {
+    title: 'Second Item',
+    folder: 'second-item',
+    children: [
+      {
+        title: 'Nested 1st',
+        folder: 'Nested-1st',
+      },
+      {
+        title: 'Nested 2st',
+        folder: 'Nested-2st',
+      },
+    ],
+  },
+  {
+    title: 'Third Item',
+    folder: 'third-item',
+  },
+];
 export function TopNav() {
   const [open, setOpen] = useNavOpen();
   const config = useConfig();
   const { logo, logoText, sections, actions, name } = config?.site ?? {};
   const { isLoading, showLoading } = useLoading();
+  console.log('sections', sections);
+
   return (
     <div className="bg-stone-700 p-3 md:px-8 fixed w-screen top-0 z-30">
       <nav className="flex items-center justify-between flex-wrap max-w-[1440px] mx-auto">
@@ -135,26 +255,27 @@ export function TopNav() {
         </div>
         <div className="flex-grow flex items-center w-auto">
           <div className="text-md flex-grow hidden lg:block">
-            {sections?.map((sec) => {
-              const folder = getFolder(config, sec.folder);
-              if (!folder)
-                return <div key={sec.folder}>Didn't find folder: {sec.folder}</div>;
+            {DUMMY_NAV_ITEMS?.map((sec) => {
+              // const folder = getFolder(config, sec.folder);
+              // if (!folder)
+              //   return <div key={sec.folder}>Didn't find folder: {sec.folder}</div>;
               return (
-                <NavLink
-                  key={sec.folder}
-                  prefetch="intent"
-                  to={`/${sec.folder}`}
-                  className={({ isActive }) =>
-                    classNames(
-                      'inline-block mt-0 text-stone-200 hover:text-white mr-4 py-1',
-                      {
-                        'border-b border-stone-200': isActive,
-                      },
-                    )
-                  }
-                >
-                  {sec.title}
-                </NavLink>
+                <NavItem item={sec} key={sec.folder} />
+                // <NavLink
+                //   key={sec.folder}
+                //   prefetch="intent"
+                //   to={`/${sec.folder}`}
+                //   className={({ isActive }) =>
+                //     classNames(
+                //       'inline-block mt-0 text-stone-200 hover:text-white mr-4 py-1',
+                //       {
+                //         'border-b border-stone-200': isActive,
+                //       },
+                //     )
+                //   }
+                // >
+                //   {sec.title}
+                // </NavLink>
               );
             })}
           </div>

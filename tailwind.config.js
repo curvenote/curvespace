@@ -7,6 +7,7 @@ module.exports = {
     extend: {
       colors: {
         primary: colors.blue,
+        success: colors.green[500],
       },
       // See https://github.com/tailwindlabs/tailwindcss-typography/blob/master/src/styles.js
       typography: (theme) => ({

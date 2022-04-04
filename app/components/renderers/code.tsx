@@ -4,7 +4,7 @@ import { LightAsync as SyntaxHighlighter } from 'react-syntax-highlighter';
 import light from 'react-syntax-highlighter/dist/cjs/styles/hljs/xcode';
 import dark from 'react-syntax-highlighter/dist/cjs/styles/hljs/vs2015';
 import { useTheme } from '../theme';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { copyTextToClipboard } from '~/utils';
 import classNames from 'classnames';
 
@@ -53,10 +53,12 @@ export function CodeBlock(props: Props) {
 
 const code: NodeRenderer<Code> = (node: any) => {
   const [showCopied, setShowCopied] = useState<boolean>(false);
+  const timeoutRef = useRef<NodeJS.Timeout>();
 
   useEffect(() => {
     if (!showCopied) return;
-    setTimeout(() => setShowCopied(false), 1000);
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    timeoutRef.current = setTimeout(() => setShowCopied(false), 1500);
   }, [showCopied]);
 
   return (
@@ -67,10 +69,10 @@ const code: NodeRenderer<Code> = (node: any) => {
       <div className="absolute hidden top-1 right-1 group-hover:block z-10">
         <button
           className={classNames(
-            'cursor-pointer transition-color duration-300 ease-in-out',
+            'p-1 cursor-pointer transition-color duration-200 ease-in-out border rounded-md',
             {
-              'text-primary-500': !showCopied,
-              'text-green-500': showCopied,
+              'text-primary-500 border-primary-500 ': !showCopied,
+              'text-success border-success ': showCopied,
             },
           )}
           title={showCopied ? 'Copied' : 'Copy to clipboard'}

@@ -4,6 +4,9 @@ import { LightAsync as SyntaxHighlighter } from 'react-syntax-highlighter';
 import light from 'react-syntax-highlighter/dist/cjs/styles/hljs/xcode';
 import dark from 'react-syntax-highlighter/dist/cjs/styles/hljs/vs2015';
 import { useTheme } from '../theme';
+import { useEffect, useState } from 'react';
+import { copyTextToClipboard } from '~/utils';
+import classNames from 'classnames';
 
 type Props = {
   children: string;
@@ -48,12 +51,48 @@ export function CodeBlock(props: Props) {
   );
 }
 
-const code: NodeRenderer<Code> = (node) => {
+const code: NodeRenderer<Code> = (node: any) => {
+  const [showCopied, setShowCopied] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (!showCopied) return;
+    setTimeout(() => setShowCopied(false), 1000);
+  }, [showCopied]);
+
   return (
     <div
       key={node.key}
-      className="not-prose rounded shadow-md dark:shadow-2xl dark:shadow-neutral-900 my-8 text-sm border border-l-4 border-l-blue-400 border-gray-200 dark:border-l-blue-400 dark:border-gray-800 overflow-scroll"
+      className="relative group not-prose rounded shadow-md dark:shadow-2xl dark:shadow-neutral-900 my-8 text-sm border border-l-4 border-l-blue-400 border-gray-200 dark:border-l-blue-400 dark:border-gray-800 overflow-scroll"
     >
+      <div className="absolute hidden top-1 right-1 group-hover:block z-10">
+        <button
+          className={classNames(
+            'cursor-pointer transition-color duration-300 ease-in-out',
+            {
+              'text-primary-500': !showCopied,
+              'text-emerald-400': showCopied,
+            },
+          )}
+          title={showCopied ? 'Copied' : 'Copy to clipboard'}
+          onClick={() => {
+            copyTextToClipboard(node.value)
+              .then(() => setShowCopied(true))
+              .catch(() => {
+                console.log('Failed to copy');
+              });
+          }}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-5 w-5"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path d="M7 9a2 2 0 012-2h6a2 2 0 012 2v6a2 2 0 01-2 2H9a2 2 0 01-2-2V9z" />
+            <path d="M5 3a2 2 0 00-2 2v6a2 2 0 002 2V5h8a2 2 0 00-2-2H5z" />
+          </svg>
+        </button>
+      </div>
       <CodeBlock
         lang={node.lang}
         emphasizeLines={node.emphasizeLines}

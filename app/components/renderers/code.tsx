@@ -70,7 +70,7 @@ const code: NodeRenderer<Code> = (node: any) => {
             'cursor-pointer transition-color duration-300 ease-in-out',
             {
               'text-primary-500': !showCopied,
-              'text-emerald-400': showCopied,
+              'text-green-500': showCopied,
             },
           )}
           title={showCopied ? 'Copied' : 'Copy to clipboard'}

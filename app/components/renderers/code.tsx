@@ -11,49 +11,17 @@ import { CheckIcon } from '@heroicons/react/outline';
 import { DuplicateIcon } from '@heroicons/react/solid';
 
 type Props = {
-  children: string;
+  value: string;
   lang?: string;
   showLineNumbers?: boolean;
   emphasizeLines?: number[];
+  className?: string;
 };
 
 export function CodeBlock(props: Props) {
   const { isLight } = useTheme();
-  const { children, lang, emphasizeLines, showLineNumbers } = props;
+  const { value, lang, emphasizeLines, showLineNumbers, className } = props;
   const highlightLines = new Set(emphasizeLines);
-  return (
-    <SyntaxHighlighter
-      language={lang}
-      showLineNumbers={showLineNumbers}
-      style={isLight ? light : dark}
-      wrapLines
-      lineNumberContainerStyle={{
-        // This stops page content shifts
-        display: 'inline-block',
-        float: 'left',
-        minWidth: '1.25em',
-        paddingRight: '1em',
-        textAlign: 'right',
-        userSelect: 'none',
-        borderLeft: '4px solid transparent',
-      }}
-      lineProps={(line) => {
-        if (typeof line === 'boolean') return {};
-        return highlightLines.has(line)
-          ? ({
-              'data-line-number': `${line}`,
-              'data-highlight': 'true',
-            } as any)
-          : ({ 'data-line-number': `${line}` } as any);
-      }}
-      customStyle={{ padding: '0.8rem' }}
-    >
-      {children}
-    </SyntaxHighlighter>
-  );
-}
-
-const code: NodeRenderer<Code> = (node: any) => {
   const [showCopied, setShowCopied] = useState<boolean>(false);
   const timeoutRef = useRef<NodeJS.Timeout>();
 
@@ -64,11 +32,36 @@ const code: NodeRenderer<Code> = (node: any) => {
   }, [showCopied]);
 
   return (
-    <div
-      key={node.key}
-      className="relative group not-prose rounded shadow-md dark:shadow-2xl dark:shadow-neutral-900 my-8 text-sm border border-l-4 border-l-blue-400 border-gray-200 dark:border-l-blue-400 dark:border-gray-800 overflow-scroll"
-    >
-      <div className="absolute hidden top-1 right-1 group-hover:block z-10">
+    <div className={classNames('relative group not-prose overflow-auto', className)}>
+      <SyntaxHighlighter
+        language={lang}
+        showLineNumbers={showLineNumbers}
+        style={isLight ? light : dark}
+        wrapLines
+        lineNumberContainerStyle={{
+          // This stops page content shifts
+          display: 'inline-block',
+          float: 'left',
+          minWidth: '1.25em',
+          paddingRight: '1em',
+          textAlign: 'right',
+          userSelect: 'none',
+          borderLeft: '4px solid transparent',
+        }}
+        lineProps={(line) => {
+          if (typeof line === 'boolean') return {};
+          return highlightLines.has(line)
+            ? ({
+                'data-line-number': `${line}`,
+                'data-highlight': 'true',
+              } as any)
+            : ({ 'data-line-number': `${line}` } as any);
+        }}
+        customStyle={{ padding: '0.8rem' }}
+      >
+        {value}
+      </SyntaxHighlighter>
+      <div className="absolute hidden top-1 right-1 group-hover:block">
         <button
           className={classNames(
             'p-1 cursor-pointer transition-color duration-200 ease-in-out',
@@ -79,7 +72,7 @@ const code: NodeRenderer<Code> = (node: any) => {
           )}
           title={showCopied ? 'Copied' : 'Copy to clipboard'}
           onClick={() => {
-            copyTextToClipboard(node.value)
+            copyTextToClipboard(value)
               .then(() => setShowCopied(true))
               .catch(() => {
                 console.log('Failed to copy');
@@ -93,14 +86,20 @@ const code: NodeRenderer<Code> = (node: any) => {
           )}
         </button>
       </div>
-      <CodeBlock
-        lang={node.lang}
-        emphasizeLines={node.emphasizeLines}
-        showLineNumbers={node.showLineNumbers}
-      >
-        {node.value || ''}
-      </CodeBlock>
     </div>
+  );
+}
+
+const code: NodeRenderer<Code> = (node) => {
+  return (
+    <CodeBlock
+      key={node.key}
+      className="rounded shadow-md dark:shadow-2xl dark:shadow-neutral-900 my-8 text-sm border border-l-4 border-l-blue-400 border-gray-200 dark:border-l-blue-400 dark:border-gray-800"
+      value={node.value || ''}
+      lang={node.lang}
+      emphasizeLines={node.emphasizeLines}
+      showLineNumbers={node.showLineNumbers}
+    />
   );
 };
 

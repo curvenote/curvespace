@@ -30,10 +30,13 @@ const mathBlock =
   (node) => {
     if (displayMode) {
       return (
-        <div className="relative">
-          <div key={node.key} dangerouslySetInnerHTML={{ __html: node.html }} />
+        <div className="relative mr-[25px]" key={node.key}>
+          <div
+            dangerouslySetInnerHTML={{ __html: node.html }}
+            className="overflow-x-auto"
+          />
           {node.numbered && (
-            <div className="absolute right-0 m-0 top-[50%] translate-y-[-50%]">
+            <div className="absolute right-[-25px] m-0 top-[50%] translate-y-[-50%]">
               ({node.number})
             </div>
           )}

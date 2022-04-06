@@ -1,4 +1,5 @@
 import { NodeRenderer } from 'myst-util-to-react';
+import classNames from 'classnames';
 
 // function Math({ value, html }: { value: string; html: string }) {
 //   const [loaded, setLoaded] = useState(false);
@@ -30,7 +31,10 @@ const mathBlock =
   (node) => {
     if (displayMode) {
       return (
-        <div className="relative mr-[25px]" key={node.key}>
+        <div
+          className={classNames('relative', { 'mr-[25px]': node.numbered })}
+          key={node.key}
+        >
           <div
             dangerouslySetInnerHTML={{ __html: node.html }}
             className="overflow-x-auto"

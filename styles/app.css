@@ -4,6 +4,6 @@
 
 @layer base {
   article table td {
-    @apply sm:p-2 p-1;
+    @apply sm:p-2 p-1 align-top;
   }
 }

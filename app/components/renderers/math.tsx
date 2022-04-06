@@ -29,7 +29,14 @@ const mathBlock =
   (displayMode: boolean): NodeRenderer =>
   (node) => {
     if (displayMode) {
-      return <div key={node.key} dangerouslySetInnerHTML={{ __html: node.html }} />;
+      return (
+        <div className="relative">
+          <div key={node.key} dangerouslySetInnerHTML={{ __html: node.html }} />
+          {node.numbered && (
+            <div className="absolute top-0 right-0">({node.number})</div>
+          )}
+        </div>
+      );
     }
     return <span key={node.key} dangerouslySetInnerHTML={{ __html: node.html }} />;
     // return <Math key={node.key} html={node.html} value={node.value as string} />;

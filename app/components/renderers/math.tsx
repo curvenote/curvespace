@@ -33,7 +33,9 @@ const mathBlock =
         <div className="relative">
           <div key={node.key} dangerouslySetInnerHTML={{ __html: node.html }} />
           {node.numbered && (
-            <div className="absolute top-0 right-0">({node.number})</div>
+            <div className="absolute right-0 m-0 top-[50%] translate-y-[-50%]">
+              ({node.number})
+            </div>
           )}
         </div>
       );

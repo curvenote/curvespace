@@ -19,8 +19,7 @@
           {
             "type": "heading",
             "depth": 2,
-            "nubmered": true,
-            "number": "1.2",
+            "enumerator": "1.2",
             "children": [
               {
                 "type": "text",

@@ -1,7 +1,8 @@
-import { NodeRenderers } from 'myst-util-to-react';
-import React, { useState, createElement as e } from 'react';
+import { Heading } from 'myst-spec';
+import { NodeRenderer } from './types';
+import { useState, createElement as e } from 'react';
 
-const Heading: NodeRenderers['heading'] = (node, children) => {
+const Heading: NodeRenderer<Heading> = (node, children) => {
   // TODO: this should be in css
   const { enumerator, depth, key, identifier } = node;
   const id = identifier || key;

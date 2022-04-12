@@ -1,33 +1,21 @@
 import { Heading } from 'myst-spec';
 import { NodeRenderer } from './types';
-import { useState, createElement as e } from 'react';
+import { createElement as e } from 'react';
 
 const Heading: NodeRenderer<Heading> = (node, children) => {
   // TODO: this should be in css
   const { enumerator, depth, key, identifier } = node;
   const id = identifier || key;
-  const [isHover, setHover] = useState(false);
   const textContent = (
     <>
       <a
-        className="section-hash"
+        className="select-none absolute top-0 left-0 -translate-x-[100%] font-normal pr-3 no-underline transition-opacity opacity-0 group-hover:opacity-70"
         href={`#${id}`}
-        aria-label="any permalink"
-        style={{
-          position: 'absolute',
-          left: 0,
-          top: 0,
-          transform: 'translateX(-100%)',
-          fontWeight: 'normal',
-          paddingRight: 4,
-          visibility: isHover ? 'visible' : 'hidden',
-        }}
+        aria-label="Permalink to this Section"
       >
         <span>#</span>
       </a>
-      {enumerator && (
-        <span style={{ userSelect: 'none', marginRight: 4 }}>{enumerator}</span>
-      )}
+      {enumerator && <span className="select-none mr-3">{enumerator}</span>}
       {children}
     </>
   );
@@ -36,10 +24,7 @@ const Heading: NodeRenderer<Heading> = (node, children) => {
     {
       key: id,
       id,
-      style: { position: 'relative' },
-      className: 'section-heading',
-      onMouseEnter: () => setHover(true),
-      onMouseLeave: () => setHover(false),
+      className: 'relative group',
     },
     textContent,
   );

@@ -8,6 +8,7 @@ import { reactiveRenderers } from './reactive';
 import { iframeRenderers } from './iframe';
 import { linkRenderers } from './links';
 import { outputRenderers } from './output';
+import HEADING_RENDERERS from './Heading';
 
 export const defaultRenderers: Record<string, NodeRenderer> = {
   ...nodes,
@@ -20,4 +21,5 @@ export const defaultRenderers: Record<string, NodeRenderer> = {
   ...admonitionRenderers,
   ...reactiveRenderers,
   ...outputRenderers,
+  ...HEADING_RENDERERS,
 };

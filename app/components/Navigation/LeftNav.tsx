@@ -15,10 +15,12 @@ type Props = {
 const HeadingLink = ({
   path,
   isIndex,
+  title,
   children,
 }: {
   path: string;
   isIndex?: boolean;
+  title?: string;
   children: React.ReactNode;
 }) => {
   const { pathname } = useLocation();
@@ -27,8 +29,9 @@ const HeadingLink = ({
   return (
     <NavLink
       prefetch="intent"
+      title={title}
       className={({ isActive }) =>
-        classNames('block', {
+        classNames('block text-ellipsis overflow-hidden', {
           'text-blue-500': !isIndex && isActive,
           'font-semibold': isActive,
           'hover:text-slate-800 dark:hover:text-slate-100': !isActive,
@@ -70,7 +73,11 @@ const Headings = ({ folder, headings, sections }: Props) => {
               })}
             >
               {heading.path ? (
-                <HeadingLink path={heading.path} isIndex={heading.level === 'index'}>
+                <HeadingLink
+                  title={heading.title}
+                  path={heading.path}
+                  isIndex={heading.level === 'index'}
+                >
                   {heading.title}
                 </HeadingLink>
               ) : (

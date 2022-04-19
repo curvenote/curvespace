@@ -1,7 +1,6 @@
 import { Link } from 'myst-spec';
 import { NodeRenderer } from '~/myst-to-react';
 import { Link as RemixLink } from 'remix';
-import classNames from 'classnames';
 import { ExternalLinkIcon, LinkIcon } from '@heroicons/react/outline';
 
 type TransformedLink = Link & { internal?: boolean };
@@ -23,32 +22,35 @@ export const link: NodeRenderer<TransformedLink> = (node, children) => {
 };
 
 export const linkBlock: NodeRenderer<TransformedLink> = (node, children) => {
-  const iconClass = 'h-8 w-8 inline-block pl-2 mr-2 -translate-y-[1px]';
+  const iconClass = 'w-6 h-6 self-center transition-transform';
+  const containerClass =
+    'flex-1 p-4 block border font-normal hover:border-blue-500 dark:hover:border-blue-400 no-underline hover:text-blue-500 dark:hover:text-blue-400 text-gray-600 dark:text-gray-100 border-gray-200 dark:border-gray-500 rounded shadow-sm hover:shadow-lg dark:shadow-neutral-700';
   const internal = node.internal ?? false;
   const nested = (
-    <aside
-      key={node.key}
-      className={classNames(
-        'admonition rounded-md my-4 border-l-4 shadow-md dark:shadow-2xl dark:shadow-neutral-900 overflow-hidden border-blue-500',
-      )}
-    >
-      <div className="px-4 py-1 bg-gray-50 dark:bg-stone-800">
-        {internal && <LinkIcon className={iconClass} />}
-        {!internal && <ExternalLinkIcon className={iconClass} />}
-        {children}
+    <div className="flex align-middle h-full">
+      <div className="flex-grow">
+        {node.title}
+        <div className="text-xs text-gray-500 dark:text-gray-400">{children}</div>
       </div>
-    </aside>
+      {internal && <LinkIcon className={iconClass} />}
+      {!internal && <ExternalLinkIcon className={iconClass} />}
+    </div>
   );
 
   if (internal) {
     return (
-      <RemixLink key={node.key} to={node.url} prefetch="intent">
+      <RemixLink
+        key={node.key}
+        to={node.url}
+        prefetch="intent"
+        className={containerClass}
+      >
         {nested}
       </RemixLink>
     );
   }
   return (
-    <a key={node.key} target="_blank" href={node.url}>
+    <a key={node.key} target="_blank" href={node.url} className={containerClass}>
       {nested}
     </a>
   );

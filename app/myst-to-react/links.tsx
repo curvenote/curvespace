@@ -50,7 +50,13 @@ export const linkBlock: NodeRenderer<TransformedLink> = (node, children) => {
     );
   }
   return (
-    <a key={node.key} target="_blank" href={node.url} className={containerClass}>
+    <a
+      key={node.key}
+      className={containerClass}
+      target="_blank"
+      rel="noopener noreferrer"
+      href={node.url}
+    >
       {nested}
     </a>
   );

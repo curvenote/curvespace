@@ -31,7 +31,7 @@ const HeadingLink = ({
       prefetch="intent"
       title={title}
       className={({ isActive }) =>
-        classNames('block text-ellipsis overflow-hidden', {
+        classNames('block text-ellipsis break-words overflow-hidden', {
           'text-blue-500': !isIndex && isActive,
           'font-semibold': isActive,
           'hover:text-slate-800 dark:hover:text-slate-100': !isActive,

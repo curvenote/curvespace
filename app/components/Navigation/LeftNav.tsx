@@ -31,7 +31,7 @@ const HeadingLink = ({
       prefetch="intent"
       title={title}
       className={({ isActive }) =>
-        classNames('block text-ellipsis break-words overflow-hidden', {
+        classNames('block break-words', {
           'text-blue-500': !isIndex && isActive,
           'font-semibold': isActive,
           'hover:text-slate-800 dark:hover:text-slate-100': !isActive,
@@ -81,7 +81,7 @@ const Headings = ({ folder, headings, sections }: Props) => {
                   {heading.title}
                 </HeadingLink>
               ) : (
-                <h5 className="text-slate-900 font-semibold my-2 text-md leading-6 dark:text-slate-100">
+                <h5 className="text-slate-900 font-semibold my-2 text-md leading-6 dark:text-slate-100 break-words">
                   {heading.title}
                 </h5>
               )}

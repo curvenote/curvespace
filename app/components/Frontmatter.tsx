@@ -6,6 +6,7 @@ import Email from './Icons/Email';
 import GitHub from './Icons/GitHub';
 import OpenAccessLogo from './Icons/OpenAccess';
 import OrcidLogo from './Icons/Orcid';
+import { Jupyter } from './Icons/Jupyter';
 
 function Author({ author }: { author: Required<FrontmatterType>['authors'][0] }) {
   return (
@@ -189,6 +190,7 @@ export function Frontmatter({ frontmatter }: { frontmatter: FrontmatterType }) {
           <GitHubLink github={github} />
           <LicenseBadges license={license} />
           <OpenAccessBadge open_access={open_access} />
+          <Jupyter jupyter={true} />
           <DOI doi={doi} />
         </div>
       )}

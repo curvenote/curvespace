@@ -63,6 +63,13 @@ function Document({
         {title && <title>{title}</title>}
         <Meta />
         <Links />
+        {config?.analytics?.plausible && (
+          <script
+            defer
+            data-domain={config.analytics.plausible}
+            src="https://plausible.io/js/plausible.js"
+          ></script>
+        )}
       </head>
       <body className="m-0 transition-colors duration-500 bg-white dark:bg-stone-900">
         <UiStateProvider>

@@ -13,11 +13,12 @@ import {
 } from '~/utils';
 import { Footer } from '~/components/FooterLinks';
 import { Bibliography } from '~/myst-to-react/cite';
+import { responseNoArticle, responseNoSite } from '~/utils/response.server';
 
 export const meta: MetaFunction = (args) => {
   const config = args.parentsData.root.config as SiteManifest | undefined;
   const data = args.data as PageLoader | undefined;
-  if (!data || !data.frontmatter) return {};
+  if (!config || !data || !data.frontmatter) return {};
   return getMetaTagsForArticle({
     origin: '',
     url: args.location.pathname,
@@ -44,11 +45,9 @@ export const loader: LoaderFunction = async ({
 }): Promise<PageLoader | Response> => {
   const folderName = params.folder;
   const config = await getConfig(request);
-  if (!config) throw new Response('Site was not found', { status: 404 });
+  if (!config) throw responseNoSite(request.url);
   const folder = getProject(config, folderName);
-  if (!folder) {
-    throw new Response('Article was not found', { status: 404 });
-  }
+  if (!folder) throw responseNoArticle();
   if (params.slug === folder.index) {
     return redirect(`/${folderName}`);
   }
@@ -57,7 +56,7 @@ export const loader: LoaderFunction = async ({
     console.log(e);
     return null;
   });
-  if (!loader) throw new Response('Article was not found', { status: 404 });
+  if (!loader) throw responseNoArticle();
   const footer = getFooterLinks(config, folderName, slug);
   return { ...loader, footer };
 };
@@ -76,24 +75,5 @@ export default function Page() {
         <Footer links={article.footer} />
       </div>
     </ReferencesProvider>
-  );
-}
-
-export function CatchBoundary() {
-  const caught = useCatch();
-  // TODO: This can give a pointer to other pages in the space
-  return (
-    <div>
-      {caught.status} {caught.statusText}
-    </div>
-  );
-}
-
-export function ErrorBoundary() {
-  return (
-    <>
-      <h1>Test</h1>
-      <div>Something went wrong.</div>
-    </>
   );
 }

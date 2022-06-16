@@ -1,10 +1,11 @@
 import { LoaderFunction } from 'remix';
+import { responseNoSite } from '~/utils/response.server';
 import { getConfig, ManifestProjectPage } from '../utils';
 import { createSitemap } from '../utils/sitemap';
 
 export const loader: LoaderFunction = async ({ request }): Promise<Response> => {
   const config = await getConfig(request);
-  if (!config) throw new Response('Site was not found', { status: 404 });
+  if (!config) throw responseNoSite(request.url);
   const slugs = config.projects
     .map((project) => {
       const pages = project.pages
@@ -20,3 +21,7 @@ export const loader: LoaderFunction = async ({ request }): Promise<Response> => 
     headers: { 'Content-Type': 'application/xml' },
   });
 };
+
+export function CatchBoundary() {
+  return <div>CAUGHT!!!</div>;
+}

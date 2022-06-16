@@ -1,15 +1,21 @@
 // import { Card } from '~/components/card';
 
-import { LoaderFunction, redirect } from 'remix';
+import { LoaderFunction, redirect, useCatch } from 'remix';
 import { getConfig } from '~/utils';
+import { responseNoArticle, responseNoSite } from '~/utils/response.server';
 
 export const loader: LoaderFunction = async ({ request }): Promise<Response | null> => {
   const config = await getConfig(request);
-  if (!config) throw new Response('Site was not found', { status: 404 });
+  if (!config) throw responseNoSite('INDEX.TSX');
   const project = config?.projects[0];
-  if (!project) throw new Response('Article was not found', { status: 404 });
+  if (!project) throw responseNoArticle();
   return redirect(`/${project.slug}`);
 };
+
+export function CatchBoundary() {
+  const caught = useCatch();
+  return <div>index catch boundary</div>;
+}
 
 // export default function Index() {
 //   return (

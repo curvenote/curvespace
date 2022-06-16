@@ -8,7 +8,7 @@ import { responseNoArticle, responseNoSite } from '~/utils/response.server';
 export const loader: LoaderFunction = async ({ request }): Promise<Response | null> => {
   console.log('index loader');
   const config = await getConfig(request);
-  if (!config) throw responseNoSite('INDEX.TSX');
+  if (!config) throw responseNoSite(request.url);
   const project = config?.projects[0];
   if (!project) throw responseNoArticle();
   return redirect(`/${project.slug}`);

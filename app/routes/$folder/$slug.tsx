@@ -1,5 +1,6 @@
-import { MetaFunction, redirect, useCatch, useLoaderData } from 'remix';
-import type { LoaderFunction, LinksFunction } from 'remix';
+import type { LinksFunction, LoaderFunction } from '@remix-run/node';
+import { MetaFunction, redirect } from '@remix-run/node';
+import { useCatch, useLoaderData } from '@remix-run/react';
 import type { GenericParent } from 'mystjs';
 import { ReferencesProvider, ContentBlock, Frontmatter } from '~/components';
 import {
@@ -14,9 +15,10 @@ import {
 import { Footer } from '~/components/FooterLinks';
 import { Bibliography } from '~/myst-to-react/cite';
 import { responseNoArticle, responseNoSite } from '~/utils/response.server';
+import { ErrorArticleNotFound } from '~/components/ErrorArticleNotFound';
 
 export const meta: MetaFunction = (args) => {
-  const config = args.parentsData.root.config as SiteManifest | undefined;
+  const config = args.parentsData?.root?.config as SiteManifest | undefined;
   const data = args.data as PageLoader | undefined;
   if (!config || !data || !data.frontmatter) return {};
   return getMetaTagsForArticle({
@@ -76,4 +78,10 @@ export default function Page() {
       </div>
     </ReferencesProvider>
   );
+}
+
+export function CatchBoundary() {
+  const { data, statusText } = useCatch();
+  if (statusText === 'Site not found') throw responseNoSite(data);
+  return <ErrorArticleNotFound />;
 }

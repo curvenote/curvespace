@@ -1,15 +1,17 @@
+import type { LinksFunction, MetaFunction } from '@remix-run/node';
+import { LoaderFunction } from '@remix-run/node';
+
 import {
   Links,
   LiveReload,
-  LoaderFunction,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
   useCatch,
   useLoaderData,
-} from 'remix';
-import type { MetaFunction, LinksFunction } from 'remix';
+} from '@remix-run/react';
+
 import React from 'react';
 import { Theme, ThemeProvider } from '~/components';
 import { Navigation } from './components/Navigation';
@@ -19,6 +21,9 @@ import { getMetaTagsForSite, getConfig, SiteManifest } from './utils';
 import { ConfigProvider } from './components/ConfigProvider';
 import { UiStateProvider } from './components/UiStateProvider';
 import { Analytics } from './components/analytics';
+import { ErrorSiteExpired } from './components/ErrorSiteExpired';
+import { ErrorSiteNotFound } from './components/ErrorSiteNotFound';
+import { responseNoSite } from './utils/response.server';
 
 export const meta: MetaFunction = ({ data }) => {
   return getMetaTagsForSite({
@@ -42,7 +47,7 @@ export const loader: LoaderFunction = async ({ request }): Promise<DocumentData>
     getConfig(request),
     getThemeSession(request),
   ]);
-  // if (!config) throw responseNoSite(request.url);
+  if (!config) throw responseNoSite(request.url);
   const data = { theme: themeSession.getTheme(), config };
   return data;
 };
@@ -108,74 +113,28 @@ export function CatchBoundary() {
   return (
     <Document theme={Theme.light} title={caught.statusText}>
       <article>
-        <main className="article-content">
-          {isLaunchpad && (
-            <>
-              <h1>This website has expired</h1>
-              <p>This website was created more than 5 days ago and has now expired.</p>
-              <h3>What's next?</h3>
-              <p>
-                Create a new temporary website from Markdown and Jupyter Notebooks using{' '}
-                <a href="https://try.curvenote.com">try.curvenote.com</a>.
-              </p>
-              <p>
-                Publish a new website with no expiry using Curvenote's open source
-                publishing tools -{' '}
-                <a href="https://docs.curvenote.com/web">learn how to get started</a>.
-              </p>
-              <p>
-                Find out more about Curvenote&apos;s scientific writing, collaboration
-                and publishing tools - visit{' '}
-                <a href="https://curvenote.com">curvenote.com</a>.
-              </p>
-            </>
-          )}
-          {!isLaunchpad && (
-            <>
-              <h1>No site at this url</h1>
-              <p>No website is available at this url, please double check the url.</p>
-              <pre>{url?.toString()}</pre>
-              <h3>What's next?</h3>
-              <p>
-                If you are expecting to see{' '}
-                <span className="font-semibold">your website</span> here and you think
-                that something has gone wrong, please send an email to{' '}
-                <a
-                  href={`mailto:support@curvenote.com?subject=Website%20Unavailable&body=${encodeURIComponent(
-                    `My website is deployed a ${url?.toString()}, but is not available. 😥`,
-                  )}`}
-                >
-                  support@curvenote.com
-                </a>
-                , or{' '}
-                <a href="https://slack.curvenote.dev">
-                  let us know on our community slack
-                </a>
-                , and we'll help out.
-              </p>
-              <p>
-                Or create a new temporary website from Markdown and Jupyter Notebooks
-                using <a href="https://try.curvenote.com">try.curvenote.com</a>.
-              </p>
-              <p>
-                Or find out more about Curvenote&apos;s scientific writing,
-                collaboration and publishing tools at{' '}
-                <a href="https://curvenote.com">curvenote.com</a>.
-              </p>
-            </>
-          )}
+        <main className="error-content">
+          {isLaunchpad && <ErrorSiteExpired />}
+          {!isLaunchpad && <ErrorSiteNotFound url={url?.toString() ?? ''} />}
         </main>
       </article>
     </Document>
   );
 }
 
-export function ErrorBoundary() {
+export function ErrorBoundary({
+  error,
+}: {
+  error: { message: string; stack: string };
+}) {
   return (
-    <Document theme={Theme.light} title="Page Not Found">
+    <Document theme={Theme.light} title="Error">
       <div className="mt-16">
-        <main className="article-content">
-          <h1>Error Boundary</h1>
+        <main className="error-content">
+          <h1>An Error Occurred</h1>
+          <p>{error.message}</p>
+          <p>The stack trace is:</p>
+          <pre>{error.stack}</pre>
         </main>
       </div>
     </Document>

@@ -1,10 +1,12 @@
 // import { Card } from '~/components/card';
 
-import { LoaderFunction, redirect, useCatch } from 'remix';
+import { LoaderFunction, redirect } from '@remix-run/node';
+import { useCatch } from '@remix-run/react';
 import { getConfig } from '~/utils';
 import { responseNoArticle, responseNoSite } from '~/utils/response.server';
 
 export const loader: LoaderFunction = async ({ request }): Promise<Response | null> => {
+  console.log('index loader');
   const config = await getConfig(request);
   if (!config) throw responseNoSite('INDEX.TSX');
   const project = config?.projects[0];

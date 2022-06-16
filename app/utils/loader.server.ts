@@ -7,7 +7,8 @@ import { PageLoader as Data, SiteManifest } from './types';
 const contentFolder = path.join(__dirname, '..', 'app', 'content');
 
 export async function getConfig(request: Request): Promise<SiteManifest | undefined> {
-  return undefined;
+  return config as any;
+  // return undefined; // simulate expired or non existing deployed site
 }
 
 export async function getData(

@@ -1,4 +1,4 @@
-import { LoaderFunction } from 'remix';
+import { LoaderFunction } from "@remix-run/node";
 import { responseNoSite } from '~/utils/response.server';
 import { getConfig, ManifestProjectPage } from '../utils';
 import { createSitemap } from '../utils/sitemap';

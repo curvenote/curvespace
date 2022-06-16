@@ -1,5 +1,4 @@
-import { HtmlMetaDescriptor } from "@remix-run/node";
-import { HtmlMetaDescriptor } from "@remix-run/react";
+import type { HtmlMetaDescriptor } from '@remix-run/react';
 
 type SocialSite = {
   title: string;

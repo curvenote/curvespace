@@ -42,7 +42,6 @@ type DocumentData = {
 };
 
 export const loader: LoaderFunction = async ({ request }): Promise<DocumentData> => {
-  console.log('root loader');
   const [config, themeSession] = await Promise.all([
     getConfig(request),
     getThemeSession(request),
@@ -101,7 +100,6 @@ export default function App() {
 
 export function CatchBoundary() {
   const caught = useCatch();
-  console.log(caught);
   let isLaunchpad = false;
   let url;
   try {

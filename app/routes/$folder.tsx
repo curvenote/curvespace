@@ -1,7 +1,7 @@
 import { DocumentOutline } from '~/components';
 import { LinksFunction } from '@remix-run/node';
-import { Outlet, useCatch } from '@remix-run/react';
-import { ErrorArticleNotFound } from '~/components/ErrorArticleNotFound';
+import { Outlet } from '@remix-run/react';
+import { ErrorProjectNotFound } from '~/components/ErrorProjectNotFound';
 import extraStyles from '~/styles/content.css';
 
 export const links: LinksFunction = () => {
@@ -20,11 +20,10 @@ export default function Folder() {
 }
 
 export function CatchBoundary() {
-  const caught = useCatch();
   return (
     <div className="mt-16">
       <main className="error-content">
-        <ErrorArticleNotFound />
+        <ErrorProjectNotFound />
       </main>
     </div>
   );

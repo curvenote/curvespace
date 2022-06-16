@@ -15,7 +15,7 @@ import {
 import { Footer } from '~/components/FooterLinks';
 import { Bibliography } from '~/myst-to-react/cite';
 import { responseNoArticle, responseNoSite } from '~/utils/response.server';
-import { ErrorArticleNotFound } from '~/components/ErrorArticleNotFound';
+import { ErrorDocumentNotFound } from '~/components/ErrorDocumentNotFound';
 
 export const meta: MetaFunction = (args) => {
   const config = args.parentsData?.root?.config as SiteManifest | undefined;
@@ -55,7 +55,7 @@ export const loader: LoaderFunction = async ({
   }
   const slug = params.loadIndexPage ? folder.index : params.slug;
   const loader = await getData(config, folderName, slug).catch((e) => {
-    console.log(e);
+    console.error(e);
     return null;
   });
   if (!loader) throw responseNoArticle();
@@ -83,5 +83,5 @@ export default function Page() {
 export function CatchBoundary() {
   const { data, statusText } = useCatch();
   if (statusText === 'Site not found') throw responseNoSite(data);
-  return <ErrorArticleNotFound />;
+  return <ErrorDocumentNotFound />;
 }

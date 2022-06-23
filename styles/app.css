@@ -30,7 +30,4 @@
   .jupyter-error {
     background-color: rgb(255, 221, 221);
   }
-  .launchpad-message a {
-    @apply hover:underline text-blue-500;
-  }
 }

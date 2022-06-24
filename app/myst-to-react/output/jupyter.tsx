@@ -15,7 +15,7 @@ import {
 } from '@curvenote/nbtx';
 import { ChevronDoubleDownIcon } from '@heroicons/react/outline';
 
-const PERCENT_OF_WINOW = 0.9;
+const PERCENT_OF_WINOW = 2;
 
 export const NativeJupyterOutputs = ({
   id,

@@ -29,12 +29,13 @@ export function OutputBlock({ children, allSafe, className }: Props) {
           'absolute z-10 w-[28px] t-0 -left-[28px] h-full cursor-pointer',
           'border border-transparent transition-colors duration-500',
           'group-hover:bg-stone-50 group-hover:border-stone-100',
+          'dark:group-hover:bg-stone-700 dark:group-hover:border-stone-600',
           'flex flex-col justify-center',
           { hidden: !canClamp },
         )}
         onClick={() => setClamped(!clamped)}
       >
-        <span className="opacity-20 group-hover:opacity-50 transition-opacity duration-500">
+        <span className="opacity-20 group-hover:opacity-50 dark:opacity-50 dark:group-hover:opacity-80 transition-opacity duration-500">
           {clamped ? <ChevronDoubleDown /> : <ChevronDoubleUp />}
         </span>
       </div>

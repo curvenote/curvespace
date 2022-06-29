@@ -26,13 +26,10 @@ export const NativeJupyterOutputs = ({
 }) => {
   if (typeof document === 'undefined') return null;
 
-  const windowSize = useWindowSize();
-
   const { data, error } = useFetchAnyTruncatedContent(outputs);
 
   const [loading, setLoading] = useState(true);
   const [frameHeight, setFrameHeight] = useState(0);
-  const [clamped, setClamped] = useState(false);
 
   const uid = useMemo(nanoid, []);
 
@@ -53,13 +50,7 @@ export const NativeJupyterOutputs = ({
 
   useEffect(() => {
     if (height == null) return;
-    if (height > PERCENT_OF_WINOW * windowSize.height) {
-      setFrameHeight(PERCENT_OF_WINOW * windowSize.height);
-      setClamped(true);
-    } else {
-      setFrameHeight(height + 25);
-      setClamped(false);
-    }
+    setFrameHeight(height + 25);
     setLoading(false);
   }, [height]);
 
@@ -80,18 +71,6 @@ export const NativeJupyterOutputs = ({
         height={frameHeight}
         sandbox="allow-scripts"
       ></iframe>
-      {clamped && (
-        <div
-          className="cursor-pointer p-1 pb-2 hover:bg-gray-50 dark:hover:bg-gray-700 text-center text-gray-500 hover:text-gray-600 dark:text-gray-200 dark:hover:text-gray-50"
-          title="Expand"
-          onClick={() => {
-            setFrameHeight(height ?? 0);
-            setClamped(false);
-          }}
-        >
-          <ChevronDoubleDownIcon className="w-5 h-5 inline"></ChevronDoubleDownIcon>
-        </div>
-      )}
     </div>
   );
 };

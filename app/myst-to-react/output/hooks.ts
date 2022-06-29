@@ -7,7 +7,7 @@ import {
   MinifiedStreamOutput,
 } from '@curvenote/nbtx/dist/minify/types';
 import { walkPaths } from '@curvenote/nbtx/dist/minify/utils';
-import { useState, useLayoutEffect } from 'react';
+import { useState, useLayoutEffect, RefObject, useCallback, useEffect } from 'react';
 
 /**
  * Truncation vs Summarization
@@ -125,4 +125,41 @@ export default function useWindowSize() {
   }, []);
 
   return windowSize;
+}
+
+export function useHeightObserver(
+  ref: RefObject<HTMLElement>,
+  callback?: (entry: DOMRectReadOnly) => void,
+) {
+  const [height, setHeight] = useState(0);
+
+  const handleResize = useCallback(
+    (entries) => {
+      if (!Array.isArray(entries)) {
+        return;
+      }
+
+      const entry = entries[0];
+      setHeight(entry.contentRect.height);
+
+      if (callback) {
+        callback(entry.contentRect);
+      }
+    },
+    [callback],
+  );
+
+  useEffect(() => {
+    if (!ref.current) return;
+    let observer: ResizeObserver | null = new ResizeObserver((entries) =>
+      handleResize(entries),
+    );
+    observer.observe(ref.current);
+    return () => {
+      observer?.disconnect();
+      observer = null;
+    };
+  }, [ref]);
+
+  return height;
 }
